@@ -1,0 +1,624 @@
+##
+## This file is part of dsa_tdb (see https://code.europa.eu/dsa/transparency-database/dsa-tdb).
+##
+## SPDX-License-Identifier: EUPLv1.2
+## Copyright (C) 2024 European Union
+##
+## This program is free software: you can redistribute it and/or modify
+## it under the terms of the EUROPEAN UNION PUBLIC LICENCE v. 1.2 as
+## published by the European Union.
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## EUROPEAN UNION PUBLIC LICENCE v. 1.2 for further details.
+##
+## You should have received a copy of the EUROPEAN UNION PUBLIC LICENCE v. 1.2.
+## along with this program.
+##
+## If not, see < https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12 >.##
+
+# Description: Configuration file for the filtering script
+
+# input_format: the format of the input files.
+# It can be either "parquet" or "csv"
+input_format: "parquet"
+
+# output_format: the format of the output file.
+# It can be either "parquet", "pickle" or "csv"
+output_format: "parquet"
+
+# write mode: the mode to use when writing the output file.
+# It can be either "overwrite" or "append"
+# If append is used, the output file specified in the cli or
+# function parameters should already exist alongside with the
+# dates auxiliary file. If the aggregated file and/or the
+# dates auxiliary file do not exist, the script will aggregate
+# all the data from scratch and create the files.
+write_mode: "append"
+
+# Whether or not to delete the original columns when the data
+# is horizontally exploded
+delete_original_columns: true
+
+# Whether or not to horizontally explode the columns
+# This means that every column that contains a list of values
+# will be exploded into multiple columns, one for each value
+# in the list. Each of these columns will contain a boolean
+# value indicating whether or not the value is present in the
+# original list.
+horizontally_explode_columns: true
+
+# Whether or not changing values of a given platform_name should
+# be coalesced to a single platform_name or not.
+normalize_platform_name: true
+
+# The value to use to fill the columns that are exploded
+# with string and boolean
+fillna_str_value: null
+fillna_bool_value: false
+
+# The dates to use to filter the data based on the content,
+# decision and created_at (upload to the DB) dates
+# The date should follow this format:
+# YYYY-MM-DD The day and the month have leading zeroes.
+# The date must be after or equal to 2000-01-01.
+# Set the variable to null to disable the specific filter
+
+# This is a required date field that indicates the upload or posting date of the content.
+content_date_range: null
+  # - "2014-01-01 00:00:00"
+  # - "2024-01-31 23:59:59"
+
+# This is the date that this decision starts from. The date needs to take the form of:
+decision_date_range: null
+  # - "2022-01-01 00:00:00"
+  # - "2024-01-31 23:59:59"
+
+created_at_date_range: null
+  # - "2022-01-01 00:00:00"
+  # - "2024-01-31 23:59:59"
+
+# The fraction (if 0 < fraction < 1) or the number of rows to sample (if fraction >= 1, will be
+# rounded to the nearest integer) from the input data **BEFORE** filtering.
+# Leave to null or <= 0 to keep all the rows.
+upstream_sampling: null
+
+# The fraction (if 0 < fraction < 1) or the number of rows to sample (if fraction >= 1, will be
+# rounded to the nearest integer) from the input data **AFTER** filtering.
+# Leave to null or <= 0 to keep all the rows.
+downstream_sampling: null
+
+# The platforms to exclude and include: you can use one or the other or both (even if the latter does not make sense)
+# Leave it to null to keep all the platforms.
+platforms_to_exclude: null
+
+# The platforms to include.
+# Leave it to null to keep all the platforms.
+platforms_to_include: null
+
+# The floor to use when filtering the created_at datetime column
+# The possible values are the ones in the pyspark documentation
+# https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.date_trunc.html
+# ‘year’, ‘yyyy’, ‘yy’ to truncate by year,
+# ‘month’, ‘mon’, ‘mm’ to truncate by month,
+# ‘day’, ‘dd’ to truncate by day,
+# Other options are: ‘microsecond’, ‘millisecond’, ‘second’, ‘minute’, ‘hour’, ‘week’, ‘quarter’
+created_at_dt_floor: "day"
+
+# The columns to import from the input files
+# Do not include here the datetime columns, they will be
+# defined in the columns_datetime variable below
+columns_to_import:
+  - decision_visibility
+  - decision_visibility_other
+  - decision_monetary
+  - decision_monetary_other
+  - decision_provision
+  - decision_account
+  - platform_name
+  - platform_uid
+  - content_date
+  - category
+  - category_addition
+  - category_specification
+  - category_specification_other
+  - decision_ground
+  - decision_facts
+  - decision_ground_reference_url
+  - illegal_content_legal_ground
+  - illegal_content_explanation
+  - incompatible_content_ground
+  - incompatible_content_explanation
+  - territorial_scope
+  - automated_decision
+  - automated_detection
+  - application_date
+  - created_at
+  - source_type
+  - source_identity
+  - content_type
+  - content_type_other
+  - uuid
+  - incompatible_content_illegal
+  - content_language
+
+# The additional columns to import from the input files that must be
+# parsed as datetime
+# TODO this is no more necessary when using spark
+columns_datetime:
+  - application_date
+  - created_at
+  - content_date
+  # - end_date_account_restriction
+  # - end_date_service_restriction
+  # - end_date_monetary_restriction
+  # - end_date_visibility_restriction
+
+
+###########################################
+# Boolean columns to check for filtering  #
+###########################################
+# Note that these columns will only be available if the
+# horizontally_explode_columns variable is set to true
+
+# The columns to check for boolean values
+# Leave to null or empty to not group 
+bool_columns_to_check: null
+  # - DECISION_VISIBILITY_CONTENT_REMOVED
+  # - DECISION_VISIBILITY_CONTENT_DISABLED
+  # - DECISION_VISIBILITY_CONTENT_DEMOTED
+  # - DECISION_VISIBILITY_CONTENT_AGE_RESTRICTED
+  # - DECISION_VISIBILITY_CONTENT_INTERACTION_RESTRICTED
+  # - DECISION_VISIBILITY_CONTENT_LABELLED
+  # - DECISION_VISIBILITY_OTHER
+  # - CONTENT_TYPE_IMAGE
+  # - CONTENT_TYPE_APP
+  # - CONTENT_TYPE_AUDIO
+  # - CONTENT_TYPE_PRODUCT
+  # - CONTENT_TYPE_SYNTHETIC_MEDIA
+  # - CONTENT_TYPE_TEXT
+  # - CONTENT_TYPE_VIDEO
+  # - CONTENT_TYPE_OTHER
+  # - CONTENT_TYPE_LINK
+  # - CONTENT_TYPE_ACCOUNT
+  # - CONTENT_TYPE_AD
+  # - CONTENT_TYPE_STICKER
+  # - CONTENT_TYPE_HASHTAG
+
+# Choose whether you want all the columns specified in the bool_columns_to_check
+# to be true ('AND') at least one of them to be true ('OR')
+bool_columns_to_check_operator: OR
+
+############################
+# The single value columns #
+############################
+# Provide the per-column value(s) to check for. If more than one value is seeked (in an "OR" operation),
+# pass them as a list. If the column is a boolean, pass the boolean value
+# to check for. If you do not want to check for a specific value, set the
+# value to null
+
+# This is an attribute that gives information about the Monetary payments suspension, termination or other restriction
+# This attribute is mandatory only if the following fields are empty: decision_visibility, decision_provision and decision_account
+# The value provided must be one of the possible values
+decision_monetary: null
+# - DECISION_MONETARY_SUSPENSION
+# - DECISION_MONETARY_TERMINATION
+# - DECISION_MONETARY_OTHER
+        
+# This is an attribute that tells us about the suspension or termination of the provision of the service.
+# This attribute is mandatory only if the following fields are empty: decision_visibility, decision_monetary and decision_account
+# The value provided must be one of the possible values
+decision_provision: null
+# - DECISION_PROVISION_PARTIAL_SUSPENSION
+# - DECISION_PROVISION_TOTAL_SUSPENSION
+# - DECISION_PROVISION_PARTIAL_TERMINATION
+# - DECISION_PROVISION_TOTAL_TERMINATION
+
+# This is an attribute that tells us about the account's status.
+# This attribute is mandatory only if the following fields are empty: decision_visibility, decision_monetary and decision_provision
+# The value provided must be one of the possible values
+decision_account: null
+# - DECISION_ACCOUNT_SUSPENDED
+# - DECISION_ACCOUNT_TERMINATED
+
+# This is a required attribute, and it tells us which category the statement belongs to.
+# The value provided must be one of the following:
+category: null
+# - STATEMENT_CATEGORY_ANIMAL_WELFARE
+# - STATEMENT_CATEGORY_DATA_PROTECTION_AND_PRIVACY_VIOLATIONS
+# - STATEMENT_CATEGORY_ILLEGAL_OR_HARMFUL_SPEECH
+# - STATEMENT_CATEGORY_INTELLECTUAL_PROPERTY_INFRINGEMENTS
+# - STATEMENT_CATEGORY_NEGATIVE_EFFECTS_ON_CIVIC_DISCOURSE_OR_ELECTIONS
+# - STATEMENT_CATEGORY_NON_CONSENSUAL_BEHAVIOUR
+# - STATEMENT_CATEGORY_PORNOGRAPHY_OR_SEXUALIZED_CONTENT
+# - STATEMENT_CATEGORY_PROTECTION_OF_MINORS
+# - STATEMENT_CATEGORY_RISK_FOR_PUBLIC_SECURITY
+# - STATEMENT_CATEGORY_SCAMS_AND_FRAUD
+# - STATEMENT_CATEGORY_SELF_HARM
+# - STATEMENT_CATEGORY_SCOPE_OF_PLATFORM_SERVICE
+# - STATEMENT_CATEGORY_UNSAFE_AND_ILLEGAL_PRODUCTS
+# - STATEMENT_CATEGORY_VIOLENCE
+
+# This is a required field and tells us the basis on which the decision was taken.
+decision_ground: null
+# - DECISION_GROUND_ILLEGAL_CONTENT
+# - DECISION_GROUND_INCOMPATIBLE_CONTENT
+
+# This is a required attribute and it must be in the form "Yes" or "No".
+# This indicates to us that decision taken in respect of automatically detected means.
+automated_detection: null
+# - Yes
+# - No
+
+# This is a required attribute and it must be one of the following:
+automated_decision: null
+# - AUTOMATED_DECISION_FULLY
+# - AUTOMATED_DECISION_PARTIALLY
+# - AUTOMATED_DECISION_NOT_AUTOMATED
+
+
+# This is a required field and tells us the facts and circumstances relied upon in taking the decision.
+# The value provided must be one of the following:
+source_type: null
+# - SOURCE_ARTICLE_16
+# - SOURCE_TRUSTED_FLAGGER
+# - SOURCE_TYPE_OTHER_NOTIFICATION
+# - SOURCE_VOLUNTARY
+
+# Optional single value columns #
+
+# This is an attribute that tells us about the account's type.
+# This attribute is optional.
+account_type: null
+# - ACCOUNT_TYPE_BUSINESS
+# - ACCOUNT_TYPE_PRIVATE
+
+# This is an optional attribute and it can be in the form "Yes" or "No".
+# This is a possibility to indicate that the content was not only considered incompatible but also illegal.
+incompatible_content_illegal: null
+# - Yes
+# - No
+
+# This is the language that the content was in.
+# This attribute is optional.
+# The value though must be one of the uppercase two letter ISO 639-1 codes, i.e., 
+# "EN", "BG", "HR", "CS", "DA", "NL", "ET", "FI", "FR", "DE", "EL", "HU", "GA", "IT",
+# "LV", "LT", "MT", "PL", "PT", "RO", "SK", "SL", "ES", "SV"
+content_language: null
+
+
+#############################################
+# The multiple value columns (list columns) #
+#############################################
+
+# This attribute tells us the visibility restriction of specific items of information provided by the recipient of the service.
+# This attribute is mandatory only if the following fields are empty: decision_monetary, decision_provision and decision_account
+# The value provided must be an array with at least one item
+decision_visibility: null
+# - DECISION_VISIBILITY_CONTENT_REMOVED
+# - DECISION_VISIBILITY_CONTENT_DISABLED
+# - DECISION_VISIBILITY_CONTENT_DEMOTED
+# - DECISION_VISIBILITY_CONTENT_AGE_RESTRICTED
+# - DECISION_VISIBILITY_CONTENT_INTERACTION_RESTRICTED
+# - DECISION_VISIBILITY_CONTENT_LABELLED
+# - DECISION_VISIBILITY_OTHER
+
+
+# This is a required attribute, and it tells us what type of content is targeted by the statement of reason.
+# The value provided must be an array with at least one of the possible values.
+# Note that the package can be used to fetch other content types, but the following are the ones that are required.
+content_type: null
+# - CONTENT_TYPE_APP
+# - CONTENT_TYPE_AUDIO
+# - CONTENT_TYPE_IMAGE
+# - CONTENT_TYPE_PRODUCT
+# - CONTENT_TYPE_SYNTHETIC_MEDIA
+# - CONTENT_TYPE_TEXT
+# - CONTENT_TYPE_VIDEO
+# - CONTENT_TYPE_OTHER
+# # Extra content type, normalized from most common values in CONTENT_TYPE_OTHER.
+# # Turn the flag `normalize_content_type` to `true` to use these.
+# - CONTENT_TYPE_LINK
+# - CONTENT_TYPE_ACCOUNT
+# - CONTENT_TYPE_AD
+# - CONTENT_TYPE_STICKER
+# - CONTENT_TYPE_HASHTAG
+
+# The optional multiple values columns
+
+# This is an optional attribute, and it tells us which additional categories the statement belongs to.
+# The value provided must be an array with one or more of the following:
+category_addition: null
+# - STATEMENT_CATEGORY_ANIMAL_WELFARE
+# - STATEMENT_CATEGORY_DATA_PROTECTION_AND_PRIVACY_VIOLATIONS
+# - STATEMENT_CATEGORY_ILLEGAL_OR_HARMFUL_SPEECH
+# - STATEMENT_CATEGORY_INTELLECTUAL_PROPERTY_INFRINGEMENTS
+# - STATEMENT_CATEGORY_NEGATIVE_EFFECTS_ON_CIVIC_DISCOURSE_OR_ELECTIONS
+# - STATEMENT_CATEGORY_NON_CONSENSUAL_BEHAVIOUR
+# - STATEMENT_CATEGORY_PORNOGRAPHY_OR_SEXUALIZED_CONTENT
+# - STATEMENT_CATEGORY_PROTECTION_OF_MINORS
+# - STATEMENT_CATEGORY_RISK_FOR_PUBLIC_SECURITY
+# - STATEMENT_CATEGORY_SCAMS_AND_FRAUD
+# - STATEMENT_CATEGORY_SELF_HARM
+# - STATEMENT_CATEGORY_SCOPE_OF_PLATFORM_SERVICE
+# - STATEMENT_CATEGORY_UNSAFE_AND_ILLEGAL_PRODUCTS
+# - STATEMENT_CATEGORY_VIOLENCE
+
+# This is an optional attribute, and it tells us which additional keywords the statement belongs to.
+# The value provided must be an array with one or more of the following:
+category_specification: null
+# - KEYWORD_ANIMAL_HARM
+# - KEYWORD_ADULT_SEXUAL_MATERIAL
+# - KEYWORD_AGE_SPECIFIC_RESTRICTIONS_MINORS
+# - KEYWORD_AGE_SPECIFIC_RESTRICTIONS
+# - KEYWORD_BIOMETRIC_DATA_BREACH
+# - KEYWORD_CHILD_SEXUAL_ABUSE_MATERIAL
+# - KEYWORD_CONTENT_PROMOTING_EATING_DISORDERS
+# - KEYWORD_COORDINATED_HARM
+# - KEYWORD_COPYRIGHT_INFRINGEMENT
+# - KEYWORD_DANGEROUS_TOYS
+# - KEYWORD_DATA_FALSIFICATION
+# - KEYWORD_DEFAMATION
+# - KEYWORD_DESIGN_INFRINGEMENT
+# - KEYWORD_DISCRIMINATION
+# - KEYWORD_DISINFORMATION
+# - KEYWORD_FOREIGN_INFORMATION_MANIPULATION
+# - KEYWORD_GENDER_BASED_VIOLENCE
+# - KEYWORD_GEOGRAPHIC_INDICATIONS_INFRINGEMENT
+# - KEYWORD_GEOGRAPHICAL_REQUIREMENTS
+# - KEYWORD_GOODS_SERVICES_NOT_PERMITTED
+# - KEYWORD_GROOMING_SEXUAL_ENTICEMENT_MINORS
+# - KEYWORD_HATE_SPEECH
+# - KEYWORD_HUMAN_EXPLOITATION
+# - KEYWORD_HUMAN_TRAFFICKING
+# - KEYWORD_ILLEGAL_ORGANIZATIONS
+# - KEYWORD_IMAGE_BASED_SEXUAL_ABUSE
+# - KEYWORD_IMPERSONATION_ACCOUNT_HIJACKING
+# - KEYWORD_INAUTHENTIC_ACCOUNTS
+# - KEYWORD_INAUTHENTIC_LISTINGS
+# - KEYWORD_INAUTHENTIC_USER_REVIEWS
+# - KEYWORD_INCITEMENT_VIOLENCE_HATRED
+# - KEYWORD_INSUFFICIENT_INFORMATION_TRADERS
+# - KEYWORD_LANGUAGE_REQUIREMENTS
+# - KEYWORD_MISINFORMATION
+# - KEYWORD_MISSING_PROCESSING_GROUND
+# - KEYWORD_NON_CONSENSUAL_IMAGE_SHARING
+# - KEYWORD_NON_CONSENSUAL_ITEMS_DEEPFAKE
+# - KEYWORD_NUDITY
+# - KEYWORD_ONLINE_BULLYING_INTIMIDATION
+# - KEYWORD_PATENT_INFRINGEMENT
+# - KEYWORD_PHISHING
+# - KEYWORD_PYRAMID_SCHEMES
+# - KEYWORD_REGULATED_GOODS_SERVICES
+# - KEYWORD_RIGHT_TO_BE_FORGOTTEN
+# - KEYWORD_RISK_ENVIRONMENTAL_DAMAGE
+# - KEYWORD_RISK_PUBLIC_HEALTH
+# - KEYWORD_SELF_MUTILATION
+# - KEYWORD_STALKING
+# - KEYWORD_SUICIDE
+# - KEYWORD_TERRORIST_CONTENT
+# - KEYWORD_TRADE_SECRET_INFRINGEMENT
+# - KEYWORD_TRADEMARK_INFRINGEMENT
+# - KEYWORD_UNLAWFUL_SALE_ANIMALS
+# - KEYWORD_UNSAFE_CHALLENGES
+# - KEYWORD_OTHER
+
+# This is a required attribute that defines territorial scope of the restriction. Each value must be the 2-letter iso code for the country and the countries must be (EU/EEA) countries.
+# The value provided must be an array.
+# Allowed values are:
+# AT, BE, BG, CY, CZ, DE, DK, EE, ES, FI, FR, GR, HR, HU, IE, IS, IT, LI, LT, LU, LV, MT, NL, NO, PL, PT, RO, SE, SI, SK
+# Note that the package will automatically map:
+# - To European Union ('EU'): ["AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "ES", "FI", "FR", "GR", "HR", "HU", "IE", "IT", "LT", "LU", "LV", "MT", "NL", "PL", "PT", "RO", "SE", "SI", "SK"]
+# - To European Economic Area ('EEA'): ["AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "ES", "FI", "FR", "GR", "HR", "HU", "IE", "IS", "IT", "LI", "LT", "LU", "LV", "MT", "NL", "NO", "PL", "PT", "RO", "SE", "SI", "SK"]
+# - To 'EEA_no_IS': ["AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "ES", "FI", "FR", "GR", "HR", "HU", "IE", "IT", "LI", "LT", "LU", "LV", "MT", "NL", "NO", "PL", "PT", "RO", "SE", "SI", "SK"]
+territorial_scope: null
+
+####################
+# Free text fields #
+####################
+# For these fields, the value must be a string of text.
+# If you are passing a regular expression, you must escape it and set
+# the corresponding "column_to_lower" field to true.
+# Leave the value to null if you do not want to filter by that field.
+
+# This is required if DECISION_VISIBILITY_OTHER was the decision_visibility.
+decision_visibility_other: null
+decision_visibility_other_to_lower: false
+
+# This is required if DECISION_MONETARY_OTHER was the decision_monetary.
+decision_monetary_other: null
+decision_monetary_other_to_lower: false
+
+# This is a required textual field to describe the facts and circumstances relied on in taking the decision.
+decision_facts: null
+decision_facts_to_lower: false
+
+# Optional free text fields
+
+# This is an url to the TOS or Law relied upon in taking the decision.
+# This is an optional attribute.
+decision_ground_reference_url: null
+decision_ground_reference_url_to_lower: false
+
+# This is required if the DECISION_GROUND_ILLEGAL_CONTENT was the decision_ground.
+# It is the legal grounds relied on.
+illegal_content_legal_ground: null
+illegal_content_legal_ground_to_lower: false
+
+# This is required if the DECISION_GROUND_ILLEGAL_CONTENT was the decision_ground.
+# This is a text that explains why the content was illegal.
+illegal_content_explanation: null
+illegal_content_explanation_to_lower: false
+
+# This is required if DECISION_GROUND_INCOMPATIBLE_CONTENT was the decision_ground.
+# It is the reference to contractual grounds.
+incompatible_content_ground: null
+incompatible_content_ground_to_lower: false
+
+# This is required if DECISION_GROUND_INCOMPATIBLE_CONTENT was the decision_ground.
+# This is a text that explains why the content is considered as incompatible on that ground.
+incompatible_content_explanation: null
+incompatible_content_explanation_to_lower: false
+
+# This is required if CONTENT_TYPE_OTHER was the content_type.
+# It is a content type that is not part of provided content type list.
+content_type_other: null
+content_type_other_to_lower: false
+
+# This field can be provided if KEYWORD_OTHER is part of the category_specification.
+category_specification_other: null
+category_specification_other_to_lower: false
+
+# This is an optional field to describe the source/notifier if needed.
+# Will not be taken into account if the 'source_type' is set to 'SOURCE_VOLUNTARY'
+source_identity: null
+source_identity_to_lower: false
+
+
+#####################
+# Restriction dates #
+#####################
+# These are not implemented yet, but they are here for future use.
+
+# The date needs to take the form of:
+# YYYY-MM-DD
+# The day and the month have leading zeroes.
+# The date must be after or equal to the application date.
+
+# This is the date that the decision on the account ends. Leave blank for indefinite.
+end_date_account_restriction: null
+
+# This is the date that the monetary decision ends. Leave blank for indefinite.
+end_date_monetary_restriction: null
+
+# This is the date that the provision decision ends. Leave blank for indefinite.
+end_date_service_restriction: null
+
+# This is the date that the visibility decision ends. Leave blank for indefinite.
+end_date_visibility_restriction: null
+
+
+###############################################
+# Fill na values for the exploded columns     #
+###############################################
+
+# The columns to fill with the fillna_str_value
+# Set the variable to null to disable the specific fill
+columns_to_fill_str:
+  - decision_monetary
+  - decision_provision
+  - decision_account
+  - incompatible_content_illegal
+  - content_language
+  # - content_type
+  - territorial_scope
+  - automated_decision
+  - automated_detection
+  # - category_addition
+  # - category_specification
+
+# The columns to fill with the fillna_bool_value
+# Set the variable to null to disable the specific fill
+columns_to_fill_bool:
+  # Content type
+  - CONTENT_TYPE_IMAGE
+  - CONTENT_TYPE_APP
+  - CONTENT_TYPE_AUDIO
+  - CONTENT_TYPE_IMAGE
+  - CONTENT_TYPE_PRODUCT
+  - CONTENT_TYPE_SYNTHETIC_MEDIA
+  - CONTENT_TYPE_TEXT
+  - CONTENT_TYPE_VIDEO
+  - CONTENT_TYPE_OTHER
+  - CONTENT_TYPE_IMAGE
+  - CONTENT_TYPE_APP
+  - CONTENT_TYPE_AUDIO
+  - CONTENT_TYPE_PRODUCT
+  - CONTENT_TYPE_SYNTHETIC_MEDIA
+  - CONTENT_TYPE_TEXT
+  - CONTENT_TYPE_VIDEO
+  - CONTENT_TYPE_OTHER
+  - CONTENT_TYPE_LINK
+  - CONTENT_TYPE_ACCOUNT
+  - CONTENT_TYPE_AD
+  - CONTENT_TYPE_STICKER
+  - CONTENT_TYPE_HASHTAG
+  # decision_visibility
+  - DECISION_VISIBILITY_CONTENT_REMOVED
+  - DECISION_VISIBILITY_CONTENT_DISABLED
+  - DECISION_VISIBILITY_CONTENT_DEMOTED
+  - DECISION_VISIBILITY_CONTENT_AGE_RESTRICTED
+  - DECISION_VISIBILITY_CONTENT_INTERACTION_RESTRICTED
+  - DECISION_VISIBILITY_CONTENT_LABELLED
+  - DECISION_VISIBILITY_OTHER
+  # Categories
+  - STATEMENT_CATEGORY_ANIMAL_WELFARE
+  - STATEMENT_CATEGORY_DATA_PROTECTION_AND_PRIVACY_VIOLATIONS
+  - STATEMENT_CATEGORY_ILLEGAL_OR_HARMFUL_SPEECH
+  - STATEMENT_CATEGORY_INTELLECTUAL_PROPERTY_INFRINGEMENTS
+  - STATEMENT_CATEGORY_NEGATIVE_EFFECTS_ON_CIVIC_DISCOURSE_OR_ELECTIONS
+  - STATEMENT_CATEGORY_NON_CONSENSUAL_BEHAVIOUR
+  - STATEMENT_CATEGORY_PORNOGRAPHY_OR_SEXUALIZED_CONTENT
+  - STATEMENT_CATEGORY_PROTECTION_OF_MINORS
+  - STATEMENT_CATEGORY_RISK_FOR_PUBLIC_SECURITY
+  - STATEMENT_CATEGORY_SCAMS_AND_FRAUD
+  - STATEMENT_CATEGORY_SELF_HARM
+  - STATEMENT_CATEGORY_SCOPE_OF_PLATFORM_SERVICE
+  - STATEMENT_CATEGORY_UNSAFE_AND_ILLEGAL_PRODUCTS
+  - STATEMENT_CATEGORY_VIOLENCE
+  # Keywords
+  - KEYWORD_ANIMAL_HARM
+  - KEYWORD_ADULT_SEXUAL_MATERIAL
+  - KEYWORD_AGE_SPECIFIC_RESTRICTIONS_MINORS
+  - KEYWORD_AGE_SPECIFIC_RESTRICTIONS
+  - KEYWORD_BIOMETRIC_DATA_BREACH
+  - KEYWORD_CHILD_SEXUAL_ABUSE_MATERIAL
+  - KEYWORD_CONTENT_PROMOTING_EATING_DISORDERS
+  - KEYWORD_COORDINATED_HARM
+  - KEYWORD_COPYRIGHT_INFRINGEMENT
+  - KEYWORD_DANGEROUS_TOYS
+  - KEYWORD_DATA_FALSIFICATION
+  - KEYWORD_DEFAMATION
+  - KEYWORD_DESIGN_INFRINGEMENT
+  - KEYWORD_DISCRIMINATION
+  - KEYWORD_DISINFORMATION
+  - KEYWORD_FOREIGN_INFORMATION_MANIPULATION
+  - KEYWORD_GENDER_BASED_VIOLENCE
+  - KEYWORD_GEOGRAPHIC_INDICATIONS_INFRINGEMENT
+  - KEYWORD_GEOGRAPHICAL_REQUIREMENTS
+  - KEYWORD_GOODS_SERVICES_NOT_PERMITTED
+  - KEYWORD_GROOMING_SEXUAL_ENTICEMENT_MINORS
+  - KEYWORD_HATE_SPEECH
+  - KEYWORD_HUMAN_EXPLOITATION
+  - KEYWORD_HUMAN_TRAFFICKING
+  - KEYWORD_ILLEGAL_ORGANIZATIONS
+  - KEYWORD_IMAGE_BASED_SEXUAL_ABUSE
+  - KEYWORD_IMPERSONATION_ACCOUNT_HIJACKING
+  - KEYWORD_INAUTHENTIC_ACCOUNTS
+  - KEYWORD_INAUTHENTIC_LISTINGS
+  - KEYWORD_INAUTHENTIC_USER_REVIEWS
+  - KEYWORD_INCITEMENT_VIOLENCE_HATRED
+  - KEYWORD_INSUFFICIENT_INFORMATION_TRADERS
+  - KEYWORD_LANGUAGE_REQUIREMENTS
+  - KEYWORD_MISINFORMATION
+  - KEYWORD_MISSING_PROCESSING_GROUND
+  - KEYWORD_NON_CONSENSUAL_IMAGE_SHARING
+  - KEYWORD_NON_CONSENSUAL_ITEMS_DEEPFAKE
+  - KEYWORD_NUDITY
+  - KEYWORD_ONLINE_BULLYING_INTIMIDATION
+  - KEYWORD_PATENT_INFRINGEMENT
+  - KEYWORD_PHISHING
+  - KEYWORD_PYRAMID_SCHEMES
+  - KEYWORD_REGULATED_GOODS_SERVICES
+  - KEYWORD_RIGHT_TO_BE_FORGOTTEN
+  - KEYWORD_RISK_ENVIRONMENTAL_DAMAGE
+  - KEYWORD_RISK_PUBLIC_HEALTH
+  - KEYWORD_SELF_MUTILATION
+  - KEYWORD_STALKING
+  - KEYWORD_SUICIDE
+  - KEYWORD_TERRORIST_CONTENT
+  - KEYWORD_TRADE_SECRET_INFRINGEMENT
+  - KEYWORD_TRADEMARK_INFRINGEMENT
+  - KEYWORD_UNLAWFUL_SALE_ANIMALS
+  - KEYWORD_UNSAFE_CHALLENGES
+  - KEYWORD_OTHER

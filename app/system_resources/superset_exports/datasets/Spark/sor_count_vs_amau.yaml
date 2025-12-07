@@ -1,0 +1,105 @@
+##
+## This file is part of dsa_tdb (see https://code.europa.eu/dsa/transparency-database/dsa-tdb).
+##
+## SPDX-License-Identifier: EUPLv1.2
+## Copyright (C) 2024 European Union
+##
+## This program is free software: you can redistribute it and/or modify
+## it under the terms of the EUROPEAN UNION PUBLIC LICENCE v. 1.2 as
+## published by the European Union.
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## EUROPEAN UNION PUBLIC LICENCE v. 1.2 for further details.
+##
+## You should have received a copy of the EUROPEAN UNION PUBLIC LICENCE v. 1.2.
+## along with this program.
+##
+## If not, see < https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12 >.##
+table_name: sor_count_vs_amau
+main_dttm_col: null
+description: null
+default_endpoint: null
+offset: 0
+cache_timeout: null
+catalog: default
+schema: default
+sql: "SELECT \n  `sor_count`.`platform_name` AS `platform_name`,\n  `sor_count`.`SUM(count)`\
+  \ AS `SUM(count)`,\n  vlopses.`Average monthly active users in millions` * 1e6 AS\
+  \ AMAU,\n  `sor_count`.`SUM(count)` / `sor_count`.days_active * 30 / (vlopses.`Average\
+  \ monthly active users in millions` * 1e6) AS `sor_per_amau`\nFROM (\n  SELECT `platform_name`\
+  \ AS `platform_name`,\n         sum(`count`) AS `SUM(count)`,\n         datediff(max(created_at),\
+  \ min(created_at)) AS days_active\n  FROM\n    (SELECT *\n     FROM parquet.`/data/tdb_data/global___full/aggregations/aggregated-complete.parquet/`)\
+  \ AS `virtual_table`\n  GROUP BY `platform_name`\n  ORDER BY `SUM(count)` DESC\n\
+  \  LIMIT 100\n) AS sor_count\nJOIN\n(SELECT * FROM parquet.`/data/vlopses.parquet`)\
+  \ AS vlopses\nON vlopses.`Designated service` = sor_count.platform_name;"
+params: null
+template_params: null
+filter_select_enabled: true
+fetch_values_predicate: null
+extra: null
+normalize_columns: false
+always_filter_main_dttm: false
+uuid: 1457164c-21e5-4ddb-97c0-fb50094a7dff
+metrics:
+- metric_name: total_count
+  verbose_name: COUNT(*)
+  metric_type: count
+  expression: COUNT(*)
+  description: null
+  d3format: null
+  currency: null
+  extra:
+    warning_markdown: ''
+  warning_text: null
+columns:
+- column_name: SUM(count)
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: BIGINT_TYPE
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: {}
+- column_name: AMAU
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: DOUBLE_TYPE
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: {}
+- column_name: sor_per_amau
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: DOUBLE_TYPE
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: {}
+- column_name: platform_name
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: STRING_TYPE
+  advanced_data_type: null
+  groupby: true
+  filterable: true
+  expression: ''
+  description: null
+  python_date_format: null
+  extra: {}
+version: 1.0.0
+database_uuid: ad2593c3-53ea-42a7-8c78-2d44fc39ec6a

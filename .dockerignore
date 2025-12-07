@@ -1,0 +1,10 @@
+**/Notebooks
+**/data
+**/dist
+**/scripts
+**/app/__pycache__
+Dockerfile
+docker-compose.yml
+**/.git
+**/.gitlab-cy.yml
+**/pre-commit-config.yaml

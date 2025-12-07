@@ -1,0 +1,476 @@
+##
+## This file is part of dsa_tdb (see https://code.europa.eu/dsa/transparency-database/dsa-tdb).
+##
+## SPDX-License-Identifier: EUPLv1.2
+## Copyright (C) 2024 European Union
+##
+## This program is free software: you can redistribute it and/or modify
+## it under the terms of the EUROPEAN UNION PUBLIC LICENCE v. 1.2 as
+## published by the European Union.
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## EUROPEAN UNION PUBLIC LICENCE v. 1.2 for further details.
+##
+## You should have received a copy of the EUROPEAN UNION PUBLIC LICENCE v. 1.2.
+## along with this program.
+##
+## If not, see < https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12 >.##
+dashboard_title: Example dashboard
+description: null
+css: ''
+slug: null
+certified_by: ''
+certification_details: ''
+published: true
+uuid: 2a169361-e961-4e7b-aabc-d6f8f062355d
+position:
+  CHART-explore-10-1:
+    children: []
+    id: CHART-explore-10-1
+    meta:
+      chartId: 10
+      height: 50
+      sliceName: Share of decision monetary by platform
+      uuid: aaad9fc0-1fa7-443c-adb5-e2d00749b260
+      width: 6
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-Vnl3QJG2Th
+    type: CHART
+  CHART-explore-11-1:
+    children: []
+    id: CHART-explore-11-1
+    meta:
+      chartId: 11
+      height: 50
+      sliceName: Share of decision account by platform
+      uuid: b2a21e16-9701-4f38-acfa-e56dac9c7532
+      width: 6
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-RzCJY5jkXlIsIuVtF3E8t
+    type: CHART
+  CHART-explore-12-1:
+    children: []
+    id: CHART-explore-12-1
+    meta:
+      chartId: 12
+      height: 50
+      sliceName: Share of decision provision by platform
+      uuid: b5806383-4994-4277-b0c3-c23c8fd15068
+      width: 6
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-RzCJY5jkXlIsIuVtF3E8t
+    type: CHART
+  CHART-explore-13-1:
+    children: []
+    id: CHART-explore-13-1
+    meta:
+      chartId: 13
+      height: 50
+      sliceName: Share of content category submitted
+      uuid: a63cda25-056d-4e0a-ac81-94d6429c78ef
+      width: 12
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-iDKGw5y4lEL98gPCM4Xab
+    type: CHART
+  CHART-explore-8-1:
+    children: []
+    id: CHART-explore-8-1
+    meta:
+      chartId: 8
+      height: 50
+      sliceName: Share of decision grounds by platform
+      uuid: 821b0ced-ef85-4623-aea2-d3e424b53954
+      width: 6
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-9M_Fu5yXmi9ds80sHpseL
+    type: CHART
+  CHART-explore-9-1:
+    children: []
+    id: CHART-explore-9-1
+    meta:
+      chartId: 9
+      height: 50
+      sliceName: Share of categories by platform
+      uuid: 0390c51b-e855-401f-8173-011721f532ac
+      width: 6
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-Vnl3QJG2Th
+    type: CHART
+  CHART-qvJIP2zMa9:
+    children: []
+    id: CHART-qvJIP2zMa9
+    meta:
+      chartId: 6
+      height: 50
+      sliceName: Count of created SoR by platform
+      uuid: 9aceee3b-4910-481c-9ffa-e270c130a1e7
+      width: 3
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-ZrodNO1xZO
+    type: CHART
+  CHART-uxLCUEVQt6:
+    children: []
+    id: CHART-uxLCUEVQt6
+    meta:
+      chartId: 5
+      height: 50
+      sliceName: Number of created SoR relative to monthly active users
+      uuid: 8ee25cb1-bf48-46b9-8de4-8b7f7fba4701
+      width: 4
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-ZrodNO1xZO
+    type: CHART
+  CHART-zydZ42wFxa:
+    children: []
+    id: CHART-zydZ42wFxa
+    meta:
+      chartId: 4
+      height: 51
+      sliceName: Counts by platform over time
+      uuid: 34bc43f3-e549-4b91-933b-db5b850eec6d
+      width: 5
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-ZrodNO1xZO
+    type: CHART
+  DASHBOARD_VERSION_KEY: v2
+  GRID_ID:
+    children:
+    - ROW-ZrodNO1xZO
+    - ROW-YIYFD0A08o7yRGou4Avmy
+    - ROW-9M_Fu5yXmi9ds80sHpseL
+    - ROW-Vnl3QJG2Th
+    - ROW-RzCJY5jkXlIsIuVtF3E8t
+    id: GRID_ID
+    parents:
+    - ROOT_ID
+    type: GRID
+  HEADER_ID:
+    id: HEADER_ID
+    meta:
+      text: Example dashboard
+    type: HEADER
+  ROOT_ID:
+    children:
+    - GRID_ID
+    id: ROOT_ID
+    type: ROOT
+  ROW-9M_Fu5yXmi9ds80sHpseL:
+    children:
+    - CHART-explore-8-1
+    - CHART-explore-9-1
+    id: ROW-9M_Fu5yXmi9ds80sHpseL
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    type: ROW
+  ROW-RzCJY5jkXlIsIuVtF3E8t:
+    children:
+    - CHART-explore-11-1
+    - CHART-explore-12-1
+    id: ROW-RzCJY5jkXlIsIuVtF3E8t
+    meta:
+      '0': ROOT_ID
+      background: BACKGROUND_TRANSPARENT
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    type: ROW
+  ROW-Vnl3QJG2Th:
+    children:
+    - CHART-explore-9-1
+    - CHART-explore-10-1
+    id: ROW-Vnl3QJG2Th
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    type: ROW
+  ROW-YIYFD0A08o7yRGou4Avmy:
+    children:
+    - CHART-explore-13-1
+    id: ROW-YIYFD0A08o7yRGou4Avmy
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    type: ROW
+  ROW-ZrodNO1xZO:
+    children:
+    - CHART-qvJIP2zMa9
+    - CHART-zydZ42wFxa
+    - CHART-uxLCUEVQt6
+    id: ROW-ZrodNO1xZO
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    type: ROW
+metadata:
+  chart_configuration:
+    '4':
+      id: 4
+      crossFilters:
+        scope: global
+        chartsInScope:
+        - 5
+        - 6
+        - 8
+        - 9
+        - 10
+        - 11
+        - 12
+        - 13
+    '5':
+      id: 5
+      crossFilters:
+        scope: global
+        chartsInScope:
+        - 4
+        - 6
+        - 8
+        - 9
+        - 10
+        - 11
+        - 12
+        - 13
+    '6':
+      id: 6
+      crossFilters:
+        scope: global
+        chartsInScope:
+        - 4
+        - 5
+        - 8
+        - 9
+        - 10
+        - 11
+        - 12
+        - 13
+    '13':
+      id: 13
+      crossFilters:
+        scope: global
+        chartsInScope:
+        - 4
+        - 5
+        - 6
+        - 8
+        - 9
+        - 10
+        - 11
+        - 12
+  global_chart_configuration:
+    scope:
+      rootPath:
+      - ROOT_ID
+      excluded: []
+    chartsInScope:
+    - 4
+    - 5
+    - 6
+    - 8
+    - 9
+    - 10
+    - 11
+    - 12
+    - 13
+  color_scheme: d3Category20
+  refresh_frequency: 0
+  expanded_slices: {}
+  label_colors: {}
+  timed_refresh_immune_slices: []
+  cross_filters_enabled: true
+  default_filters: '{}'
+  native_filter_configuration:
+  - id: NATIVE_FILTER-L15DwjIOD
+    controlValues:
+      enableEmptyFilter: false
+      defaultToFirstItem: false
+      multiSelect: true
+      searchAllOptions: false
+      inverseSelection: false
+    name: platform_name
+    filterType: filter_select
+    targets:
+    - column:
+        name: platform_name
+      datasetUuid: 0c29bfcb-681d-48ec-a6ec-d7e419783187
+    defaultDataMask:
+      extraFormData:
+        filters:
+        - col: platform_name
+          op: IN
+          val:
+          - AliExpress
+          - Amazon
+          - App Store
+          - Booking.com
+          - Facebook
+          - Google Maps
+          - Google Play
+          - Google Shopping
+          - Instagram
+          - LinkedIn
+          - Pinterest
+          - Pornhub
+          - Shein
+          - Snapchat
+          - Stripchat
+          - Temu
+          - TikTok
+          - X
+          - XNXX
+          - XVideos
+          - YouTube
+          - Wikipedia
+          - Zalando
+      filterState:
+        validateMessage: false
+        validateStatus: false
+        label: AliExpress, Amazon, App Store, Booking.com, Facebook, Google Maps,
+          Google Play, Google Shopping, Instagram, LinkedIn, Pinterest, Pornhub, Shein,
+          Snapchat, Stripchat, Temu, TikTok, X, XNXX, Xvideos, YouTube, Wikipedia,
+          Zalando
+        value:
+        - AliExpress
+        - Amazon
+        - App Store
+        - Booking.com
+        - Facebook
+        - Google Maps
+        - Google Play
+        - Google Shopping
+        - Instagram
+        - LinkedIn
+        - Pinterest
+        - Pornhub
+        - Shein
+        - Snapchat
+        - Stripchat
+        - Temu
+        - TikTok
+        - X
+        - XNXX
+        - XVideos
+        - YouTube
+        - Wikipedia
+        - Zalando
+    cascadeParentIds: []
+    scope:
+      rootPath:
+      - ROOT_ID
+      excluded: []
+    type: NATIVE_FILTER
+    description: ''
+    chartsInScope:
+    - 98
+    - 99
+    - 100
+    - 103
+    - 104
+    - 105
+    - 106
+    tabsInScope: []
+  - id: NATIVE_FILTER-i5pX5o35P
+    controlValues:
+      enableEmptyFilter: false
+    name: created_at
+    filterType: filter_time
+    targets:
+    - {}
+    defaultDataMask:
+      extraFormData: {}
+      filterState: {}
+      ownState: {}
+    cascadeParentIds: []
+    scope:
+      rootPath:
+      - ROOT_ID
+      excluded: []
+    type: NATIVE_FILTER
+    description: ''
+    chartsInScope:
+    - 98
+    tabsInScope: []
+  shared_label_colors:
+    SUM(sor_per_amau): '#1f77b4'
+    Google Shopping: '#ff9896'
+    TikTok: '#bcbd22'
+    Facebook: '#2ca02c'
+    Amazon: '#aec7e8'
+    Pinterest: '#8c564b'
+    AliExpress: '#1f77b4'
+    YouTube: '#17becf'
+    Google Maps: '#98df8a'
+    Instagram: '#9467bd'
+    Google Play: '#d62728'
+    Snapchat: '#f7b6d2'
+    Temu: '#c7c7c7'
+    Booking.com: '#ffbb78'
+    X: '#dbdb8d'
+    LinkedIn: '#c5b0d5'
+    Pornhub: '#c49c94'
+    App Store: '#ff7f0e'
+    Shein: '#e377c2'
+    Stripchat: '#7f7f7f'
+    Zalando: '#9edae5'
+    STATEMENT_CATEGORY_SCOPE_OF_PLATFORM_SERVICE: '#1f77b4'
+    STATEMENT_CATEGORY_ILLEGAL_OR_HARMFUL_SPEECH: '#aec7e8'
+    STATEMENT_CATEGORY_UNSAFE_AND_ILLEGAL_PRODUCTS: '#ff7f0e'
+    STATEMENT_CATEGORY_PORNOGRAPHY_OR_SEXUALIZED_CONTENT: '#ffbb78'
+    STATEMENT_CATEGORY_VIOLENCE: '#2ca02c'
+    STATEMENT_CATEGORY_DATA_PROTECTION_AND_PRIVACY_VIOLATIONS: '#98df8a'
+    STATEMENT_CATEGORY_SCAMS_AND_FRAUD: '#d62728'
+    STATEMENT_CATEGORY_INTELLECTUAL_PROPERTY_INFRINGEMENTS: '#ff9896'
+    STATEMENT_CATEGORY_PROTECTION_OF_MINORS: '#9467bd'
+    STATEMENT_CATEGORY_NEGATIVE_EFFECTS_ON_CIVIC_DISCOURSE_OR_ELECTIONS: '#c5b0d5'
+    STATEMENT_CATEGORY_SELF_HARM: '#8c564b'
+    STATEMENT_CATEGORY_RISK_FOR_PUBLIC_SECURITY: '#c49c94'
+    STATEMENT_CATEGORY_NON_CONSENSUAL_BEHAVIOUR: '#e377c2'
+    STATEMENT_CATEGORY_ANIMAL_WELFARE: '#f7b6d2'
+  color_scheme_domain:
+  - '#1f77b4'
+  - '#aec7e8'
+  - '#ff7f0e'
+  - '#ffbb78'
+  - '#2ca02c'
+  - '#98df8a'
+  - '#d62728'
+  - '#ff9896'
+  - '#9467bd'
+  - '#c5b0d5'
+  - '#8c564b'
+  - '#c49c94'
+  - '#e377c2'
+  - '#f7b6d2'
+  - '#7f7f7f'
+  - '#c7c7c7'
+  - '#bcbd22'
+  - '#dbdb8d'
+  - '#17becf'
+  - '#9edae5'
+version: 1.0.0

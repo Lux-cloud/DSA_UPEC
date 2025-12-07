@@ -1,0 +1,30 @@
+#
+# This file is part of dsa_tdb (see https://code.europa.eu/dsa/transparency-database/dsa-tdb).
+#
+# SPDX-License-Identifier: EUPLv1.2
+# Copyright (C) 2024 European Union
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the EUROPEAN UNION PUBLIC LICENCE v. 1.2 as
+# published by the European Union.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# EUROPEAN UNION PUBLIC LICENCE v. 1.2 for further details.
+#
+# You should have received a copy of the EUROPEAN UNION PUBLIC LICENCE v. 1.2.
+# along with this program.
+#
+# If not, see < https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12 >.#
+
+import dsa_tdb.types as T
+
+
+def test_loadFile():
+    # Test case 1: Testing that all the str enums work as expected
+
+    assert T.ALL_PLATFORMS_ENTRY_VALUE == "All Platforms"
+    assert T.TDB_dailyDumpsVersion.light == "light"
+    assert "parquet" in T.TDB_chunkFormat._member_names_
+    assert "uuid" in list(T.TDB_columnsFull._member_names_)
+    assert "created_at" in [T.TDB_datetimeColumns[c] for c in T.TDB_datetimeColumns._member_names_]

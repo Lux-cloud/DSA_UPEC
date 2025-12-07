@@ -1,0 +1,213 @@
+##
+## This file is part of dsa_tdb (see https://code.europa.eu/dsa/transparency-database/dsa-tdb).
+##
+## SPDX-License-Identifier: EUPLv1.2
+## Copyright (C) 2024 European Union
+##
+## This program is free software: you can redistribute it and/or modify
+## it under the terms of the EUROPEAN UNION PUBLIC LICENCE v. 1.2 as
+## published by the European Union.
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## EUROPEAN UNION PUBLIC LICENCE v. 1.2 for further details.
+##
+## You should have received a copy of the EUROPEAN UNION PUBLIC LICENCE v. 1.2.
+## along with this program.
+##
+## If not, see < https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12 >.##
+
+# .gitlab-ci.yml: custom gitlab pipeline template
+# Change the runner image if needed:
+image: quay.io/jupyter/pyspark-notebook:2025-04-30
+
+# See https://docs.gitlab.com/ee/ci/yaml/#interruptible
+workflow:
+  auto_cancel:
+    on_new_commit: interruptible
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  POETRY_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pypoetry"
+  # Speedup caching of node modules
+  # see https://gitlab.com/gitlab-org/gitlab-runner/-/merge_requests/2684
+  FF_USE_FASTZIP: 1
+  CACHE_COMPRESSION_LEVEL: "fastest"
+
+.cache_template: &app-cache
+  cache:
+    key:
+      files:
+        - poetry.lock
+    paths:
+      - .cache/pip
+      - .cache/pypoetry
+
+.before_script_template: &app-before-script
+  before_script:
+    - export HOME=/tmp
+    - export PATH=$HOME/.local/bin:$PATH
+    - export HTTP_PROXY=$PROXY HTTPS_PROXY=$PROXY NO_PROXY=$NOPROXY http_proxy=$PROXY https_proxy=$PROXY no_proxy=$NOPROXY
+    - pip install pipx && pipx ensurepath && pipx install poetry==1.8.4
+    - poetry install --with dev
+    - source $(poetry env info --path)/bin/activate
+    # Workaround, see https://gitlab.com/gitlab-org/gitlab-runner/-/merge_requests/3538
+    - git config --global --add safe.directory $CI_PROJECT_DIR
+
+stages:
+  - test
+  - build
+  - scans
+  - deploy
+
+test:
+  stage: test
+  <<: [ *app-before-script, *app-cache ]
+  rules:
+    - if: ($CI_COMMIT_REF_NAME != "master" && $CI_COMMIT_REF_NAME != "main")
+  tags:
+    - openshift-test
+  script:
+    # Lint license headers
+    # Error if any file is updated. We need this since licenseheaders do not
+    # have different exit values.
+    - poetry install --with test
+    - poetry run poe licenseheaders
+    - git diff --quiet --name-only . || exit 1
+    # Test lint
+    - poetry run poe pre-commit
+    # Run the rest of the tests
+    - poetry run pytest
+
+test_py313:
+  image: python:3.13.1-bullseye
+  stage: test
+  <<: [ *app-before-script, *app-cache ]
+  rules:
+    - if: ($CI_COMMIT_REF_NAME != "master" && $CI_COMMIT_REF_NAME != "main")
+  tags:
+    - openshift-test
+  script:
+    - poetry install --with test
+    # Run the tests
+    - poetry run pytest
+
+e2e-test:
+  stage: test
+  <<: [ *app-before-script, *app-cache ]
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: always
+  tags:
+    - openshift-test
+  script:
+    # Run a cheap end-to-end test using the daily routine over two days in light version
+    - ./scripts/daily_routine.sh --start 2023-09-25 --end 2023-09-26 --version light
+    # Data folder created
+    - ls data/tdb_data/global___light
+    # Log and parameters
+    - ls data/tdb_data/global___light/log
+    - ls data/tdb_data/global___light/parameters.yaml
+    # 2 SHA files
+    - "[[ $(ls data/tdb_data/global___light/*.zip.sha1 | wc -l) == 2 ]]"
+    # Daily dump chunks for each date
+    - "[[ $(ls data/tdb_data/global___light/daily_dumps_chunked/ | wc -l) == 2 ]]"
+    # Parquet aggregation
+    - "ls data/tdb_data/global___light/aggregations/aggregated-global-light.{dates_files.csv,configuration.yaml,parquet}"
+
+app_build:
+  stage: build
+  <<: [ *app-before-script, *app-cache ]
+  tags:
+    - openshift-test
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: always
+  script:
+    - poetry build
+    - poetry config repositories.gitlab "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/pypi"
+    - poetry config http-basic.gitlab -- gitlab-ci-token "$CI_JOB_TOKEN"
+    - poetry publish --repository gitlab
+  artifacts:
+    paths:
+      - dist/*
+
+docker_build:
+  image: docker:24.0.5
+  services:
+    - name: docker:24.0.5-dind
+      alias: docker
+  stage: build
+  tags:
+    - docker
+
+  before_script:
+    - docker info
+  
+  variables:
+    # When you use the dind service, you must instruct Docker to talk with
+    # the daemon started inside of the service. The daemon is available
+    # with a network connection instead of the default
+    # /var/run/docker.sock socket. Docker 19.03 does this automatically
+    # by setting the DOCKER_HOST in
+    # https://github.com/docker-library/docker/blob/d45051476babc297257df490d22cbd806f1b11e4/19.03/docker-entrypoint.sh#L23-L29
+    #
+    # The 'docker' hostname is the alias of the service container as described at
+    # https://docs.gitlab.com/ee/ci/services/#accessing-the-services.
+    #
+    # Specify to Docker where to create the certificates. Docker
+    # creates them automatically on boot, and creates
+    # `/certs/client` to share between the service and job
+    # container, thanks to volume mount from config.toml
+    DOCKER_TLS_CERTDIR: "/certs"
+    DOCKER_DRIVER: overlay2
+
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: always
+  script:
+    - echo "$CI_JOB_TOKEN" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
+    - docker build -t $CI_REGISTRY$CI_REGISTRY_LOCATION:$CI_COMMIT_TAG -t $CI_REGISTRY$CI_REGISTRY_LOCATION:latest .
+    - docker push $CI_REGISTRY$CI_REGISTRY_LOCATION:$CI_COMMIT_TAG
+    - docker push $CI_REGISTRY$CI_REGISTRY_LOCATION:latest
+
+pages:
+  stage: deploy
+  <<: [ *app-before-script, *app-cache ]
+  tags:
+    - openshift-test
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: always
+  script:
+    - poetry install --with docs --with dev
+    - poetry run poe doc
+  after_script:
+    - mv docs/build/html ./public
+  artifacts:
+    paths:
+      - public
+
+# No container registry enabled in the JRC
+# container:
+#   image: quay.apps.ocpt.jrc.ec.europa.eu/public/dockerhub/debian:bullseye-slim
+#   tags:
+#     - openshift-test
+#   stage: container
+#   before_script:
+#     - echo "This is the before_script stage for the container step"
+#     - *setup_proxies
+#     - echo "Installing docker"
+#     - apt-get update
+#     - curl -fsSL https://get.docker.com -o get-docker.sh
+#     - sh ./get-docker.sh
+#     - echo "$DOCKER_REGISTRY_PASSWORD" | podman login $CI_REGISTRY -u "$DOCKER_REGISTRY_USERNAME" --password-stdin
+#   script:
+#     - echo "This is the container stage"
+#     - img_tag=$CI_REGISTRY/$CI_PROJECT_NAME:$CI_COMMIT_TAG
+#     - podman build -t $img_tag .
+#     - podman push $img_tag
+#     - podman push $img_tag $CI_REGISTRY/$CI_PROJECT_NAME:latest
+#   rules:
+#     - if: $CI_COMMIT_TAG
+#       when: always

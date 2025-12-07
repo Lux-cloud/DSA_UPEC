@@ -1,0 +1,116 @@
+##
+## This file is part of dsa_tdb (see https://code.europa.eu/dsa/transparency-database/dsa-tdb).
+##
+## SPDX-License-Identifier: EUPLv1.2
+## Copyright (C) 2024 European Union
+##
+## This program is free software: you can redistribute it and/or modify
+## it under the terms of the EUROPEAN UNION PUBLIC LICENCE v. 1.2 as
+## published by the European Union.
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## EUROPEAN UNION PUBLIC LICENCE v. 1.2 for further details.
+##
+## You should have received a copy of the EUROPEAN UNION PUBLIC LICENCE v. 1.2.
+## along with this program.
+##
+## If not, see < https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12 >.##
+slice_name: Number of created SoR relative to monthly active users
+description: The average number of SoRs sent on a monthly basis by each platform per
+  monthly active users.
+certified_by: null
+certification_details: null
+viz_type: echarts_timeseries_scatter
+params:
+  datasource: 26__table
+  viz_type: echarts_timeseries_scatter
+  slice_id: 101
+  x_axis: platform_name
+  xAxisForceCategorical: true
+  x_axis_sort: platform_name
+  x_axis_sort_asc: true
+  x_axis_sort_series: name
+  x_axis_sort_series_ascending: true
+  metrics:
+  - aggregate: SUM
+    column:
+      advanced_data_type: null
+      changed_on: '2024-11-08T16:28:55.180587'
+      column_name: sor_per_amau
+      created_on: '2024-11-08T16:28:38.385148'
+      description: null
+      expression: ''
+      extra: null
+      filterable: true
+      groupby: true
+      id: 808
+      is_active: true
+      is_dttm: false
+      python_date_format: null
+      type: DOUBLE_TYPE
+      type_generic: 0
+      uuid: ac3d8ff9-e821-4000-a652-4f825174f8ac
+      verbose_name: null
+    datasourceWarning: false
+    expressionType: SIMPLE
+    hasCustomLabel: false
+    label: SUM(sor_per_amau)
+    optionName: metric_gow92dp15sj_o9ydc9rh6oc
+    sqlExpression: null
+  groupby: []
+  adhoc_filters:
+  - clause: WHERE
+    comparator: No filter
+    datasourceWarning: false
+    expressionType: SIMPLE
+    filterOptionName: filter_ykt4djvni1_v6lvhgj4jx
+    isExtra: false
+    isNew: false
+    operator: TEMPORAL_RANGE
+    operatorId: TEMPORAL_RANGE
+    sqlExpression: null
+    subject: created_at
+  order_desc: true
+  row_limit: 10000
+  truncate_metric: false
+  show_empty_columns: false
+  comparison_type: values
+  annotation_layers: []
+  forecastPeriods: 10
+  forecastInterval: 0.8
+  x_axis_title_margin: 15
+  y_axis_title_margin: 15
+  y_axis_title_position: Left
+  sort_series_type: name
+  sort_series_ascending: true
+  color_scheme: supersetColors
+  show_value: true
+  only_total: true
+  markerEnabled: false
+  markerSize: 6
+  minorTicks: true
+  show_legend: false
+  legendType: scroll
+  legendOrientation: top
+  x_axis_time_format: smart_date
+  xAxisLabelRotation: 90
+  rich_tooltip: true
+  tooltipTimeFormat: smart_date
+  y_axis_format: SMART_NUMBER
+  logAxis: true
+  minorSplitLine: false
+  truncateXAxis: true
+  y_axis_bounds:
+  - null
+  - null
+  extra_form_data: {}
+  dashboards:
+  - 1
+query_context: '{"datasource":{"id":26,"type":"table"},"force":false,"queries":[{"filters":[{"col":"created_at","op":"TEMPORAL_RANGE","val":"No
+  filter"}],"extras":{"having":"","where":""},"applied_time_extras":{},"columns":[{"columnType":"BASE_AXIS","sqlExpression":"platform_name","label":"platform_name","expressionType":"SQL"}],"metrics":[{"aggregate":"SUM","column":{"advanced_data_type":null,"changed_on":"2024-11-08T16:28:55.180587","column_name":"sor_per_amau","created_on":"2024-11-08T16:28:38.385148","description":null,"expression":"","extra":null,"filterable":true,"groupby":true,"id":808,"is_active":true,"is_dttm":false,"python_date_format":null,"type":"DOUBLE_TYPE","type_generic":0,"uuid":"ac3d8ff9-e821-4000-a652-4f825174f8ac","verbose_name":null},"datasourceWarning":false,"expressionType":"SIMPLE","hasCustomLabel":false,"label":"SUM(sor_per_amau)","optionName":"metric_gow92dp15sj_o9ydc9rh6oc","sqlExpression":null}],"orderby":[[{"aggregate":"SUM","column":{"advanced_data_type":null,"changed_on":"2024-11-08T16:28:55.180587","column_name":"sor_per_amau","created_on":"2024-11-08T16:28:38.385148","description":null,"expression":"","extra":null,"filterable":true,"groupby":true,"id":808,"is_active":true,"is_dttm":false,"python_date_format":null,"type":"DOUBLE_TYPE","type_generic":0,"uuid":"ac3d8ff9-e821-4000-a652-4f825174f8ac","verbose_name":null},"datasourceWarning":false,"expressionType":"SIMPLE","hasCustomLabel":false,"label":"SUM(sor_per_amau)","optionName":"metric_gow92dp15sj_o9ydc9rh6oc","sqlExpression":null},false]],"annotation_layers":[],"row_limit":10000,"series_columns":[],"series_limit":0,"order_desc":true,"url_params":{},"custom_params":{},"custom_form_data":{},"time_offsets":[],"post_processing":[{"operation":"pivot","options":{"index":["platform_name"],"columns":[],"aggregates":{"SUM(sor_per_amau)":{"operator":"mean"}},"drop_missing_columns":true}},{"operation":"sort","options":{"is_sort_index":true,"ascending":true}},{"operation":"flatten"}]}],"form_data":{"datasource":"26__table","viz_type":"echarts_timeseries_scatter","slice_id":101,"x_axis":"platform_name","xAxisForceCategorical":true,"x_axis_sort":"platform_name","x_axis_sort_asc":true,"x_axis_sort_series":"name","x_axis_sort_series_ascending":true,"metrics":[{"aggregate":"SUM","column":{"advanced_data_type":null,"changed_on":"2024-11-08T16:28:55.180587","column_name":"sor_per_amau","created_on":"2024-11-08T16:28:38.385148","description":null,"expression":"","extra":null,"filterable":true,"groupby":true,"id":808,"is_active":true,"is_dttm":false,"python_date_format":null,"type":"DOUBLE_TYPE","type_generic":0,"uuid":"ac3d8ff9-e821-4000-a652-4f825174f8ac","verbose_name":null},"datasourceWarning":false,"expressionType":"SIMPLE","hasCustomLabel":false,"label":"SUM(sor_per_amau)","optionName":"metric_gow92dp15sj_o9ydc9rh6oc","sqlExpression":null}],"groupby":[],"adhoc_filters":[{"clause":"WHERE","comparator":"No
+  filter","datasourceWarning":false,"expressionType":"SIMPLE","filterOptionName":"filter_ykt4djvni1_v6lvhgj4jx","isExtra":false,"isNew":false,"operator":"TEMPORAL_RANGE","operatorId":"TEMPORAL_RANGE","sqlExpression":null,"subject":"created_at"}],"order_desc":true,"row_limit":10000,"truncate_metric":false,"show_empty_columns":false,"comparison_type":"values","annotation_layers":[],"forecastPeriods":10,"forecastInterval":0.8,"x_axis_title_margin":15,"y_axis_title_margin":15,"y_axis_title_position":"Left","sort_series_type":"name","sort_series_ascending":true,"color_scheme":"supersetColors","show_value":true,"only_total":true,"markerEnabled":false,"markerSize":6,"minorTicks":true,"show_legend":false,"legendType":"scroll","legendOrientation":"top","x_axis_time_format":"smart_date","xAxisLabelRotation":90,"rich_tooltip":true,"tooltipTimeFormat":"smart_date","y_axis_format":"SMART_NUMBER","logAxis":true,"minorSplitLine":false,"truncateXAxis":true,"y_axis_bounds":[null,null],"extra_form_data":{},"dashboards":[1],"force":false,"result_format":"json","result_type":"full"},"result_format":"json","result_type":"full"}'
+cache_timeout: null
+uuid: 8ee25cb1-bf48-46b9-8de4-8b7f7fba4701
+version: 1.0.0
+dataset_uuid: 1457164c-21e5-4ddb-97c0-fb50094a7dff

@@ -1,0 +1,17 @@
+*.pyc
+dist/
+build/
+public/
+docs/public
+docs/examples/data
+*.egg-info
+*.parquet
+*.zip
+*.log
+*.csv
+.ipynb_checkpoints
+notebooks
+Notebooks
+.env
+docs/Example.ipynb
+.ruff_cache

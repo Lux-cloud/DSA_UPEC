@@ -1,0 +1,27 @@
+##
+## This file is part of dsa_tdb (see https://code.europa.eu/dsa/transparency-database/dsa-tdb).
+##
+## SPDX-License-Identifier: EUPLv1.2
+## Copyright (C) 2024 European Union
+##
+## This program is free software: you can redistribute it and/or modify
+## it under the terms of the EUROPEAN UNION PUBLIC LICENCE v. 1.2 as
+## published by the European Union.
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## EUROPEAN UNION PUBLIC LICENCE v. 1.2 for further details.
+##
+## You should have received a copy of the EUROPEAN UNION PUBLIC LICENCE v. 1.2.
+## along with this program.
+##
+## If not, see < https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12 >.##
+SELECTED_PLATFORM=$1
+SELECTED_VERSION=$2
+OUTPUT_FOLDER=$3
+
+# Download and chunk the latest dumps, deleting the original files when chunked
+dsa-tdb-cli preprocess -d -n 4\
+                    -o $OUTPUT_FOLDER\
+                    -p $SELECTED_PLATFORM\
+                    -v $SELECTED_VERSION

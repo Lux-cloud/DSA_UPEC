@@ -1,0 +1,128 @@
+##
+## This file is part of dsa_tdb (see https://code.europa.eu/dsa/transparency-database/dsa-tdb).
+##
+## SPDX-License-Identifier: EUPLv1.2
+## Copyright (C) 2024 European Union
+##
+## This program is free software: you can redistribute it and/or modify
+## it under the terms of the EUROPEAN UNION PUBLIC LICENCE v. 1.2 as
+## published by the European Union.
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## EUROPEAN UNION PUBLIC LICENCE v. 1.2 for further details.
+##
+## You should have received a copy of the EUROPEAN UNION PUBLIC LICENCE v. 1.2.
+## along with this program.
+##
+## If not, see < https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12 >.##
+slice_name: Share of decision type by platform
+description: null
+certified_by: null
+certification_details: null
+viz_type: heatmap_v2
+params:
+  datasource: 1__table
+  viz_type: heatmap_v2
+  slice_id: 7
+  x_axis: platform_name
+  groupby:
+    label: decision_account
+    sqlExpression: replace(coalesce(decision_provision, decision_account, decision_monetary),
+      'DECISION_', '')
+    expressionType: SQL
+  metric:
+    aggregate: SUM
+    column:
+      advanced_data_type: null
+      certification_details: null
+      certified_by: null
+      column_name: count
+      description: null
+      expression: null
+      filterable: true
+      groupby: true
+      id: 797
+      is_certified: false
+      is_dttm: false
+      python_date_format: null
+      type: BIGINT_TYPE
+      type_generic: 0
+      verbose_name: null
+      warning_markdown: null
+    datasourceWarning: false
+    expressionType: SIMPLE
+    hasCustomLabel: false
+    label: SUM(count)
+    optionName: metric_uytt45amtk_o0pdsesx79
+    sqlExpression: null
+  adhoc_filters:
+  - expressionType: SIMPLE
+    subject: content_date
+    operator: TEMPORAL_RANGE
+    operatorId: TEMPORAL_RANGE
+    comparator: No filter
+    clause: WHERE
+    sqlExpression: null
+    isExtra: false
+    isNew: false
+    datasourceWarning: false
+    filterOptionName: filter_m71zi9ftms8_kr8n9m99cp
+  row_limit: 10000
+  linear_color_scheme: dark_blue
+  xscale_interval: 1
+  yscale_interval: 1
+  normalize_across: x
+  left_margin: auto
+  bottom_margin: auto
+  value_bounds:
+  - null
+  - null
+  y_axis_format: SMART_NUMBER
+  time_format: '%d/%m/%Y'
+  sort_x_axis: alpha_asc
+  sort_y_axis: alpha_asc
+  show_legend: true
+  show_percentage: false
+  normalized: true
+  extra_form_data: {}
+  dashboards: []
+  annotation_layers: []
+  legend_type: continuous
+query_context: '{"datasource": {"id": 1, "type": "table"}, "force": false, "queries":
+  [{"filters": [{"col": "content_date", "op": "TEMPORAL_RANGE", "val": "No filter"}],
+  "extras": {"having": "", "where": ""}, "applied_time_extras": {}, "columns": [],
+  "metrics": [{"aggregate": "SUM", "column": {"advanced_data_type": null, "certification_details":
+  null, "certified_by": null, "column_name": "count", "description": null, "expression":
+  null, "filterable": true, "groupby": true, "id": 797, "is_certified": false, "is_dttm":
+  false, "python_date_format": null, "type": "BIGINT_TYPE", "type_generic": 0, "verbose_name":
+  null, "warning_markdown": null}, "datasourceWarning": false, "expressionType": "SIMPLE",
+  "hasCustomLabel": false, "label": "SUM(count)", "optionName": "metric_uytt45amtk_o0pdsesx79",
+  "sqlExpression": null}], "annotation_layers": [], "row_limit": 10000, "series_limit":
+  0, "order_desc": true, "url_params": {}, "custom_params": {}, "custom_form_data":
+  {}}], "form_data": "{\"datasource\": \"1__table\", \"viz_type\": \"heatmap_v2\",
+  \"slice_id\": 7, \"x_axis\": \"platform_name\", \"groupby\": {\"label\": \"decision_account\",
+  \"sqlExpression\": \"replace(coalesce(decision_provision, decision_account, decision_monetary),
+  ''DECISION_'', '''')\", \"expressionType\": \"SQL\"}, \"metric\": {\"aggregate\":
+  \"SUM\", \"column\": {\"advanced_data_type\": null, \"certification_details\": null,
+  \"certified_by\": null, \"column_name\": \"count\", \"description\": null, \"expression\":
+  null, \"filterable\": true, \"groupby\": true, \"id\": 797, \"is_certified\": false,
+  \"is_dttm\": false, \"python_date_format\": null, \"type\": \"BIGINT_TYPE\", \"type_generic\":
+  0, \"verbose_name\": null, \"warning_markdown\": null}, \"datasourceWarning\": false,
+  \"expressionType\": \"SIMPLE\", \"hasCustomLabel\": false, \"label\": \"SUM(count)\",
+  \"optionName\": \"metric_uytt45amtk_o0pdsesx79\", \"sqlExpression\": null}, \"adhoc_filters\":
+  [{\"expressionType\": \"SIMPLE\", \"subject\": \"content_date\", \"operator\": \"TEMPORAL_RANGE\",
+  \"operatorId\": \"TEMPORAL_RANGE\", \"comparator\": \"No filter\", \"clause\": \"WHERE\",
+  \"sqlExpression\": null, \"isExtra\": false, \"isNew\": false, \"datasourceWarning\":
+  false, \"filterOptionName\": \"filter_m71zi9ftms8_kr8n9m99cp\"}], \"row_limit\":
+  10000, \"linear_color_scheme\": \"dark_blue\", \"xscale_interval\": 1, \"yscale_interval\":
+  1, \"normalize_across\": \"x\", \"left_margin\": \"auto\", \"bottom_margin\": \"auto\",
+  \"value_bounds\": [null, null], \"y_axis_format\": \"SMART_NUMBER\", \"time_format\":
+  \"%d/%m/%Y\", \"sort_x_axis\": \"alpha_asc\", \"sort_y_axis\": \"alpha_asc\", \"show_legend\":
+  true, \"show_percentage\": false, \"normalized\": true, \"extra_form_data\": {},
+  \"dashboards\": [], \"annotation_layers\": [], \"legend_type\": \"continuous\"}",
+  "result_format": "json", "result_type": "full"}'
+cache_timeout: null
+uuid: 523b0d8c-e715-4ed9-bab7-89908bb3a2f2
+version: 1.0.0
+dataset_uuid: 0c29bfcb-681d-48ec-a6ec-d7e419783187

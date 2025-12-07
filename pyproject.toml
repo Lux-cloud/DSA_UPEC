@@ -1,0 +1,96 @@
+[tool.poetry]
+name = "dsa-tdb"
+version = "0.6.13"
+description = "The tools and code to manage the daily dumps of the TDB."
+authors = ["DSA CNECT F2"]
+license = "EUPLv1.2"
+readme = "README.md"
+
+
+[tool.poetry.dependencies]
+python = ">=3.10.0,<3.14.0"
+pandas = "2.2.2"
+lxml = "^5.3.0"
+tqdm = "^4.66.1"
+requests = "^2.31.0"
+pyarrow = "^18.0.0"
+beautifulsoup4 = "^4.12.2"
+pydantic = "^2.5.2"
+numpy = "1.26.4"
+pyspark = "^3.5.3"
+pyyaml = "^6.0.2"
+psutil = "^6.0.0"
+html5lib = "^1.1"
+soupsieve = "^2.6"
+strenum = "^0.4.15"
+python-slugify = "^8.0.4"
+
+[tool.poetry.scripts]
+dsa-tdb-cli = 'dsa_tdb.cli:main'
+
+[tool.poetry.group.docs]
+optional = true
+
+[tool.poetry.group.docs.dependencies]
+sphinx = "^7.2.6"
+sphinx-rtd-theme = "^3.0.1"
+sphinxcontrib-autoprogram = "^0.1.8"
+nbsphinx = "^0.9.4"
+myst-parser = "^4.0.0"
+myst-nb = "^1.1.2"
+
+
+[tool.poetry.group.dev]
+optional = true
+
+[tool.poetry.group.dev.dependencies]
+notebook = "^7.1.2"
+licenseheaders = "^0.8.8"
+pre-commit = "^4.0.1"
+matplotlib = "^3.9.2"
+seaborn = "^0.13.2"
+poethepoet = "^0.29.0"
+licensecheck = "^2024.3"
+ruff = "^0.7.4"
+bandit = ">=1.7.4"
+pre-commit-hooks = "^5.0.0"
+
+[tool.poetry.group.webapp]
+optional = true
+
+[tool.poetry.group.webapp.dependencies]
+fastapi = "^0.115.2"
+celery = {extras = ["redis"], version = "^5.4.0"}
+flower = "^2.0.1"
+uvicorn = "^0.32.0"
+
+[tool.poetry.group.test]
+optional = true
+
+[tool.poetry.group.test.dependencies]
+pytest = "^8.2.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poe.tasks]
+pre-commit="pre-commit run --all-files --hook-stage=manual --show-diff-on-failure"
+licenseheaders="licenseheaders -t .copyright.tmpl -y 2024 -n 'dsa_tdb' -u 'https://code.europa.eu/dsa/transparency-database/dsa-tdb' -x '.cache/*' -v"
+
+[tool.poe.tasks.doc]
+shell = "rm -rf docs/build/* && cp notebooks/Example.ipynb docs/ && sphinx-build -M html docs docs/build"
+
+[tool.ruff]
+line-length = 120
+preview = true
+
+[tool.ruff.lint]
+extend-select = [
+  "FAST",  # FastAPI rules
+  "I",   # isort
+  "NPY", # numpy specific rules
+  "TRY", # tryceratops
+  "UP",  # pyupgrade
+]
+ignore=['TRY003', 'UP031', 'TRY002', 'TRY301', 'FAST002']
